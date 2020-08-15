@@ -1,0 +1,45 @@
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+group 'com.coronadosolutions.customviews'
+version '1.0.0'
+
+//To publish run
+//  gradlew clean publish bintrayUpload --info
+
+project.ext {
+    mavGitUrl = 'https://github.com/HellMem/CustomViews'
+    mavProjectName = 'customviews'
+    mavLibraryLicenses = ["Apache-2.0":'http://www.apache.org/licenses/LICENSE-2.0.txt']
+    mavLibraryDescription = "An Awesome Android library"
+    mavPublishToMavenLocal = true
+    mavSiteUrl = 'https://github.com/HellMem/CustomViews'
+}
+
+
+def properties = new Properties()
+properties.load(new FileInputStream("local.properties"))
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.key")
+    publications = ['Production']
+    configurations = ['archives']
+    override = true
+    pkg {
+        repo = 'CustomViews'
+        name = 'CustomViews'
+        description = "It's an awesome lib"
+        publicDownloadNumbers = true
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/HellMem/CustomViews'
+        version {
+            name = this.version
+            desc = "Version ${this.version}"
+            released = new Date()
+            vcsTag = this.version
+        }
+    }
+}
+
+apply from: 'https://raw.githubusercontent.com/sky-uk/gradle-maven-plugin/master/gradle-mavenizer.gradle'
